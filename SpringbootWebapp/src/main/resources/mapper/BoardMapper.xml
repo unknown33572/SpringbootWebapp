@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.springbootwebapp.mapper.BoardMapper">
+  <resultMap id="BoardMap" type="BoardDto">
+    <id column="b_id" property="bId"/>
+    <result column="content" property="content"/>
+    <result column="title" property="title"/>
+    <result column="u_id" property="uId"/>
+    <result column="post_time" property="postTime"/>
+    <result column="update_time" property="updateTime"/>
+    <result column="status" property="status"/>
+    <result column="view_count" property="viewCount"/>
+    <result column="login_user_like_count" property="loginUserLikeStatus"/>
+<!--
+-->
+    <association property="user"
+                 select="com.project.springbootwebapp.mapper.UserMapper.findByUId"
+                 column="u_id"
+                 fetchType="lazy"/>
+<!--    <collection property="replies"-->
+<!--                select="com.project.springbootwebapp.mapper.BoardReplyMapper.findByBIdAndParentBrIdIsNull"-->
+<!--                column="b_id"-->
+<!--                fetchType="lazy"/>-->
+  </resultMap>
+
+  <insert id="insertOne" useGeneratedKeys="true" keyProperty="bId" parameterType="BoardDto">
+    INSERT INTO boards (content, title, u_id)
+    VALUES (#{content}, #{title}, #{uId})
+  </insert>
+
+  <update id="updateOne" parameterType="BoardDto">
+    UPDATE boards
+    SET content=#{content}, title=#{title}
+    WHERE b_id=#{bId}
+  </update>
+
+<!--  <update id="updateStatusByBId" parameterType="BoardDto">-->
+<!--    UPDATE boards-->
+<!--    SET status=#{status}-->
+<!--    WHERE b_id=#{bId}-->
+<!--  </update>-->
+<!--  -->
+<!--  <update id="updateIncrementViewCountByBId">-->
+<!--    UPDATE boards-->
+<!--    SET view_count=view_count+1-->
+<!--    WHERE b_id=#{bId}-->
+<!--  </update>-->
+
+  <delete id="deleteOne">
+    DELETE FROM boards
+    WHERE b_id=#{bId}
+  </delete>
+
+  <select id="findByBId" resultMap="BoardMap">
+    SELECT * FROM boards
+    WHERE b_id=#{bId}
+  </select>
+
+  <select id="findAll" resultMap="BoardMap">
+    SELECT * FROM boards
+  </select>
+</mapper>
